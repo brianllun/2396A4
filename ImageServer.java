@@ -30,7 +30,7 @@ public class ImageServer {
     		FMain.setVisible(true);
     		FMain.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
     	} else {
-    		System.exit(0);
+    		System.exit(0); 
     	}
     }
 }
