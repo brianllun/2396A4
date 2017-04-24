@@ -18,6 +18,16 @@ public class ImageServer extends JPanel{
     protected JFileChooser FChooser = new JFileChooser();
     protected ImagePanel iPanel;
     {
+        JButton reloadButton = new JButton("Load another image");
+        reloadButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                getImage();
+                revalidate();
+                repaint();
+            }
+        });
+        add(reloadButton,BorderLayout.SOUTH);
         getImage();
     }
     public ImageServer(LayoutManager layout){
@@ -41,8 +51,6 @@ public class ImageServer extends JPanel{
         } else {
             System.exit(0);
         }
-        JButton reloadButton = new JButton("Load another image");
-        add(reloadButton,BorderLayout.SOUTH);
     }
     private static void showGUI() {
         JFrame FMain = new JFrame("Image Server");
