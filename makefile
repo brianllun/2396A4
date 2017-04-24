@@ -1,14 +1,11 @@
 Compile: ImageServer.java ImagePeer.java
 	javac ImageServer.java
 	javac ImagePeer.java
-CServer:ImageServer.java
-	javac ImageServer.java
-CPeer:ImagePeer.java
-	javac ImagePeer.java
-RServer:ImageServer.java
+
+Server:ImageServer.java
 	javac ImageServer.java
 	java ImageServer
-RPeer:ImagePeer.java
+Peer:ImagePeer.java
 	javac ImagePeer.java
 	java ImagePeer
 Clean:
