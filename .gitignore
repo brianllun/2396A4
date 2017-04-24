@@ -1,2 +1,6 @@
 /ImagePeer.class
 /ImageServer.class
+
+*.class
+
+ImageServer$ImagePanel.class

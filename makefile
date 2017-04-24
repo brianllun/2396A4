@@ -10,4 +10,4 @@ Peer:ImagePeer.java
 	javac ImagePeer.java
 	java ImagePeer
 Clean:
-	rm -f ImageServer.class ImagePeer.class
+	rm -f *.class

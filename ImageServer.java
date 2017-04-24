@@ -53,11 +53,9 @@ public class ImageServer extends JPanel{
         FMain.setVisible(true);
     }
 
-
     public static void main(String[] args) throws Exception {
         showGUI();
     }
-
     public static class ImagePanel extends JPanel {
     	private BufferedImage imageBuffer;
     	ImagePanel(File f){
