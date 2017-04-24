@@ -10,8 +10,6 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashSet;
 
-
-
 import javax.swing.*;
 import javax.swing.event.*;
 import javax.imageio.ImageIO;
