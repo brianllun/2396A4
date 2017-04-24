@@ -18,10 +18,27 @@ import javax.imageio.ImageIO;
 
 public class ImageServer extends JPanel{
     protected JFileChooser FChooser = new JFileChooser();
-    public ImageServer(){
+    protected ImagePanel iPanel;
+    {
+        getImage();
+    }
+    public ImageServer(LayoutManager layout){
+        this(layout, true);
+    }
+    public ImageServer(LayoutManager layout, boolean isDoubleBuffered) {
+        super(layout, isDoubleBuffered);
+    }
+    public ImageServer(boolean isDoubleBuffered) {
+        super(null, isDoubleBuffered);
+    }
+    public ImageServer() {
+        this(true);
+}
+    private void getImage(){
         int returnVal = FChooser.showOpenDialog(this);
         if (returnVal == JFileChooser.APPROVE_OPTION){
-                ImagePanel iPanel = new ImagePanel(FChooser.getSelectedFile());
+                iPanel = new ImagePanel(FChooser.getSelectedFile());
+                iPanel.setPreferredSize(new Dimension(600, 600));
                 add(iPanel,BorderLayout.CENTER);
         } else {
             System.exit(0);
@@ -29,17 +46,11 @@ public class ImageServer extends JPanel{
         JButton reloadButton = new JButton("Load another image");
         add(reloadButton,BorderLayout.SOUTH);
     }
-
     private static void showGUI() {
-
         JFrame FMain = new JFrame("Image Server");
         FMain.setDefaultCloseOperation(FMain.EXIT_ON_CLOSE);
-
-        ImageServer newContentPane = new ImageServer();
-
-        newContentPane.setOpaque(true);
         FMain.setBounds(0,0,600,600);
-        FMain.getContentPane().add(newContentPane,BorderLayout.CENTER);
+        FMain.getContentPane().add(new ImageServer(new BorderLayout()),BorderLayout.CENTER);
         FMain.pack();
         FMain.setVisible(true);
     }
@@ -65,7 +76,7 @@ public class ImageServer extends JPanel{
     	}
     	protected void paintComponent(Graphics g) {
     		super.paintComponent(g);
-    		g.drawImage(imageBuffer, 0, 0, 600, 600, null);
+    		g.drawImage(imageBuffer, 0, 0, 600, 600, this);
     	}
     }
 }
