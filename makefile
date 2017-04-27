@@ -5,7 +5,7 @@ Compile: ImageServer.java ImagePeer.java
 
 Server:ImageServer.java
 	javac ImageServer.java
-	java ImageServer
+	java ImageServer 5
 Peer:ImagePeer.java
 	javac ImagePeer.java
 	java ImagePeer
