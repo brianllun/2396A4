@@ -38,7 +38,10 @@ public class ImageServer extends JPanel{
         add(reloadButton,BorderLayout.SOUTH);
         getImage();
     }
-    ImageServer(LayoutManager layout){
+    public ImageServer(){
+        super(null, true);
+    }
+    public ImageServer(LayoutManager layout){
         super(layout, true);
     }
     private void getImage(){
@@ -60,12 +63,21 @@ public class ImageServer extends JPanel{
     {
        JOptionPane.showMessageDialog(null, infoMessage, "InfoBox: " + titleBar, JOptionPane.INFORMATION_MESSAGE);
     }
+    public void listenClient(){
+        OpenPort8000 op8000 = new OpenPort8000();
+        ClientListener cL = new ClientListener(op8000);
+        cL.start();
+    }
 
     public static void main(String[] args) throws Exception {
         int max_connection = Integer.parseInt(args[0]);
-        showGUI();
-        listenSocket();
+        ImageServer hehe = new ImageServer();
+        hehe.showGUI();
+        InetAddress IP=InetAddress.getLocalHost();
+        hehe.infoBox(IP.getHostAddress(),"IP.getHostAddress()");
+        hehe.listenClient();
     };
+
 
     public static class ImagePanel extends JPanel {
     	private BufferedImage imageBuffer;
@@ -86,44 +98,66 @@ public class ImageServer extends JPanel{
     		g.drawImage(imageBuffer, 0, 0, 600, 600, this);
     	}
     }
-    private static class Peer{
-        private String userN;
-        private Date lastLogin = new Date();
-        private int blkNum;
-    }
-    private static void listenSocket(){
-        ServerSocket iServer = null;
-        Socket clientSocket = null;
-        boolean socket_accpeted = false;
-        try{
-            iServer = new ServerSocket(8000);
-        } catch (IOException e) {
-            System.out.println("Port listening fail!");
-        }
 
-        try{
-            clientSocket = iServer.accept();
-        } catch (IOException e) {
-            System.out.println("Accept failed: 8000");
+    public static class ClientListener extends Thread {
+        private ServerSocket serverSocket = null;
+        private Socket cLisSocket = null;
+        private boolean socket_Accpeted = false;
+        private Socket socket;
+        private BufferedReader in;
+        private PrintWriter out;
+        private final int ServerPort = 8000;
+        public ClientListener(Runnable r){
+            super(r);
         }
-        if (clientSocket.isConnected()) {socket_accpeted = true;}
+        public ClientListener(){
+            try{
+                serverSocket = new ServerSocket(ServerPort);
+            } catch (IOException e) {
+                infoBox("Fail to initiate at port 8000","Fail!");
+            }
+            try{
+                synchronized(serverSocket){
+                cLisSocket = serverSocket.accept();
+                this.run();
+                }
+            } catch (IOException e) {
+                System.out.println("Accept failed: 8000");
+            }
+            if (cLisSocket.isConnected()) {socket_Accpeted = true;}
+        }
+        /**
+         * The set of all names of clients in the chat room.  Maintained
+         * so that we can check that new clients are not registering name
+         * already in use.
+         */
+        private HashSet<String> names = new HashSet<String>();
 
-        // try{
-        //     in = new BufferedReader(new InputStreamReader(client.getInputStream()));
-        //     out = new PrintWriter(client.getOutputStream(), true);
-        // } catch (IOException e) {
-        //     System.out.println("Accept failed: 8000");
-        //     System.exit(-1);
-        // }
-        // while(true){
-        //     try{
-        //         line = in.readLine();
-        //         //Send data back to client
-        //         out.println(line);
-        //     } catch (IOException e) {
-        //         System.out.println("Read failed");
-        //         System.exit(-1);
-        //     }
+        /**
+         * The set of all the print writers for all the clients.  This
+         * set is kept so we can easily broadcast messages.
+         */
+        private HashSet<PrintWriter> writers = new HashSet<PrintWriter>();
+
+        /**
+         * Constructs a handler thread, squirreling away the socket.
+         * All the interesting work is done in the run method.
+         */
+        // public ClientListener(Socket socket) {
+        //     this.socket = socket;
         // }
     }
+
+    public class OpenPort8000 implements Runnable{
+        /**
+         * Services this thread's client by repeatedly requesting a
+         * screen name until a unique one has been submitted, then
+         * acknowledges the name and registers the output stream for
+         * the client in a global set, then repeatedly gets inputs and
+         * broadcasts them.
+         */
+        public void run() {
+        }
+    }
+
 }
