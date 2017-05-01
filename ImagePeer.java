@@ -22,9 +22,12 @@ public class ImagePeer {
 		// showGUI();
 		InetAddress IP=InetAddress.getLocalHost();
 		IPAdd = IPAdd.getByName(inputBox("Input your fucking Server IP!","IP.getHostAddress()"));
-		System.out.println(IPAdd.toString());
-		System.out.println(IP.toString());
-
+		try{
+			Socket sock = new Socket(IPAdd.getHostAddress(), 8000);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			infoBox("Fail","Fail");
+		}
 	};
 	public static void infoBox(String infoMessage, String titleBar){
 	   JOptionPane.showMessageDialog(null, infoMessage, "InfoBox: " + titleBar, JOptionPane.INFORMATION_MESSAGE);
