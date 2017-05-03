@@ -150,12 +150,30 @@ public class ImageServer extends JPanel{
             jf = IFile;
             jfs = jf.getName();
             BufferedImage bfImage = (BufferedImage) getScaledImage(ImageIO.read(jf),600,600);
-            System.out.println("Image to BABuffer: "+ImageIO.write(bfImage, jfs.substring(jfs.lastIndexOf(".")+1,jfs.length()), baout));
-            System.out.print("File Size: "+baout.size());
-            byte[] size = ByteBuffer.allocate(4).putInt(baout.size()).array();
-            byte[] realbyte = baout.toByteArray();
+            // System.out.println("Image to BABuffer: "+ImageIO.write(bfImage, jfs.substring(jfs.lastIndexOf(".")+1,jfs.length()), baout));
+            // System.out.print("File Size: "+baout.size());
+            // byte[] size = ByteBuffer.allocate(4).putInt(baout.size()).array();
+            // byte[] realbyte = baout.toByteArray();
+            // out.write(size);
+            // out.flush();
+            // out.write(realbyte);
+            // out.flush();
+            // baout.reset();
 
             BufferedImage[][] bfImageArray = getSplittedImage(bfImage);
+            for (int i=0; i*30 < 600; i++){
+                for (int j=0; j*30 < 600; j++){
+                    System.out.println("Image to BABuffer: "+ImageIO.write(bfImageArray[i][j], jfs.substring(jfs.lastIndexOf(".")+1,jfs.length()), baout));
+                    System.out.println("File Size: "+baout.size());
+                    byte[] size = ByteBuffer.allocate(4).putInt(baout.size()).array();
+                    byte[] realbyte = baout.toByteArray();
+                    out.write(size);
+                    out.flush();
+                    out.write(realbyte);
+                    out.flush();
+                    baout.reset();
+                }
+            }
             // JDialog dialog = new JDialog();
             // dialog.setPreferredSize(new Dimension(600,600));
             // JLabel label = new JLabel(new ImageIcon(realbyte));
@@ -163,11 +181,6 @@ public class ImageServer extends JPanel{
             // dialog.pack();
             // dialog.setVisible(true);
 
-            out.write(size);
-            out.flush();
-            out.write(realbyte);
-            out.flush();
-            baout.reset();
         }
         public void run(){
             try{

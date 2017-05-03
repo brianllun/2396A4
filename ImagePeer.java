@@ -10,17 +10,23 @@ import javax.imageio.*;
 
 public class ImagePeer extends JPanel{
     /**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 16476560113239447L;
+	protected GridLayout glayout = new GridLayout(20,20);
 	protected ImagePanel iPanel;
 	protected JFrame FMain = new JFrame("Image Client");
 	protected InetAddress IPAdd;
 	protected BufferedImage imageBuffer;
+	protected JLabel[][] gridPanel= new JLabel[20][20];
 	{
-		iPanel = new ImagePanel();
+		iPanel = new ImagePanel(glayout);
         iPanel.setPreferredSize(new Dimension(600, 600));
         add(iPanel,BorderLayout.CENTER);
+		for (int i=0; i < 20; i++) for (int j=0; j < 20; j++){
+			gridPanel[i][j] = new JLabel();
+			iPanel.add(gridPanel[i][j]);
+		}
 	}
 	public static void main(String[] args) throws Exception {
 		// int max_connection = Integer.parseInt(args[0]);
@@ -49,7 +55,6 @@ public class ImagePeer extends JPanel{
 		}
 	}
 	public void go(){
-		JLabel jl = new JLabel();
 		showGUI();
 		try{
 			IPAdd = InetAddress.getByName(inputBox("Input your fucking Server IP!","IP.getHostAddress()"));
@@ -59,17 +64,18 @@ public class ImagePeer extends JPanel{
 			InputStream in = sock.getInputStream();
 			infoBox("(Client)Connected!","");
 			byte[] sizeAr = new byte[4];
-			jl.setVisible(true);
-			jl.setPreferredSize(new Dimension(600,600));
-			iPanel.add(jl);
 			while (true){
 				try{
-					if(in.read(sizeAr) < 0){sock.close(); break;};
-					infoBox("looping","");
-					byte[] byteAr = new byte[ByteBuffer.wrap(sizeAr).asIntBuffer().get()];
-					ImageIcon tempImage = fetchImage(byteAr, in);
-					jl.setIcon(tempImage);
-
+					for (int i=0; i <= 19; i++){
+						for (int j=0; j<=19; j++){
+							if(in.read(sizeAr) < 0){sock.close(); break;};
+							byte[] byteAr = new byte[ByteBuffer.wrap(sizeAr).asIntBuffer().get()];
+							ImageIcon tempImage = fetchImage(byteAr, in);
+							gridPanel[j][i].setIcon(tempImage);
+							// iPanel.revalidate();
+						}
+					}
+					iPanel.repaint();
 
 					// JDialog dialog = new JDialog();
 					// dialog.setPreferredSize(new Dimension(600,600));
@@ -104,11 +110,12 @@ public class ImagePeer extends JPanel{
 	}
 	public static class ImagePanel extends JPanel {
         /**
-		 * 
+		 *
 		 */
 		private static final long serialVersionUID = 768818327301329884L;
 		private BufferedImage imageBuffer;
-		ImagePanel(){
+		ImagePanel(GridLayout g){
+			setLayout(g);
         }
 		public void setImage(BufferedImage f){
 			imageBuffer = f;
